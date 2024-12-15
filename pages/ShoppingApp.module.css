@@ -136,3 +136,7 @@
 .deleteButton:hover {
     background-color: #c82333;
 }
+
+.updateArea {
+    margin-top: 15px;     
+}

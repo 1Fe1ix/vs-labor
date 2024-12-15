@@ -29,8 +29,7 @@ services:
   shopping-frontend:  # Dein Next.js Frontend
     build: .
     environment:
-      #API_URL: "http://shopping-backend:8080/api/shopping"
-      API_URL: "https://8080-1fe1ix-vslabor-1656h38tm4q.ws-eu117.gitpod.io/api/shopping"  # Verweis auf das Backend
+      - NEXT_PUBLIC_API_URL= https://8080-1fe1ix-vslabor-j14pr6aq9hu.ws-eu117.gitpod.io/api/shopping    #Backend
     ports:
       - "3000:3000"
     depends_on:

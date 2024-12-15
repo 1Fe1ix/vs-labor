@@ -9,8 +9,7 @@ export default function ShoppingApp() {
     const [cart, setCart] = useState([]);
     const [selectedItemName, setSelectedItemName] = useState('');
     const [selectedItemAmount, setSelectedItemAmount] = useState(1);
-    //const BASE_URL = process.env.BACKEND_URL;
-    const API_URL = process.env.API_URL;
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     
 
 
@@ -19,9 +18,8 @@ export default function ShoppingApp() {
     useEffect(() => {
         const fetchItems = async () => {
             try {
-                const response = await axios.get("https://8080-1fe1ix-vslabor-1656h38tm4q.ws-eu117.gitpod.io/api/shopping");
-                //const response = await axios.get(API_URL);
-                //const response = await axios.get(process.env.API_URL);
+                const response = await axios.get(API_URL);
+                console.log(API_URL);
                 setItems(response.data);
             } catch (error) {
                 console.error('Error fetching items:', error);
@@ -73,8 +71,7 @@ export default function ShoppingApp() {
         const newItem = { name: selectedItemName, amount: selectedItemAmount };
 
         try {
-            const response = await axios.post("https://8080-1fe1ix-vslabor-1656h38tm4q.ws-eu117.gitpod.io/api/shopping", newItem);
-            //const response = await axios.post('${process.env.API_URL}/api/shopping', newItem);
+            const response = await axios.post(API_URL, newItem);
             setItems([...items, response.data]);
             setSelectedItemName('');
             setSelectedItemAmount(1);
@@ -84,14 +81,19 @@ export default function ShoppingApp() {
     };
 
     // Update an item in the shopping list
-    const updateItem = async (name, updatedAmount) => {
+    const updateItem = async (name, newName, newAmount) => {
         try {
-            const response = await axios.put(`${process.env.API_URL}/api/shopping/${name}`, { amount: updatedAmount });
-            if (response.status === 200) {
-                setItems(items.map(item =>
-                    item.name === name ? { ...item, amount: updatedAmount } : item
-                ));
-            }
+
+            const data = {
+                name: newName,
+                amount: newAmount
+            };
+    
+            const response = await axios.put(`${API_URL}/${name}`, data, {headers: { 'Content-Type': 'application/json' }});
+            
+
+            //reload page
+            window.location.reload();
         } catch (error) {
             console.error('Error updating item:', error);
         }
@@ -100,8 +102,7 @@ export default function ShoppingApp() {
     // Delete an item from the shopping list
     const deleteItem = async (name) => {
         try {
-            //await axios.delete(`$https://8080-1fe1ix-vslabor-1656h38tm4q.ws-eu117.gitpod.io/api/shopping/api/shopping/${name}`);
-            await axios.delete(`${BASE_URL}/api/shopping/${name}`);
+            await axios.delete(`${API_URL}/${name}`);
             setItems(items.filter(item => item.name !== name));
         } catch (error) {
             console.error('Error deleting item:', error);
@@ -140,6 +141,37 @@ export default function ShoppingApp() {
                                     Delete Item
                                 </button>
                             </div>
+
+                            {/* update option below*/}
+                            <div className = {styles.updateArea}>
+                            <input
+                            type="text"
+                            defaultValue={item.name}
+                            className={styles.input}
+                            onChange={(e) => item.newName = e.target.value}
+                            />
+                            <input
+                            type="number"
+                            min="1"
+                            defaultValue={item.amount}
+                            className={styles.input}
+                            onChange={(e) => item.newAmount = parseInt(e.target.value)}
+                            />
+
+                            <div className={styles.buttonGroup}>
+                            <button
+                            onClick={() => {
+                                const updatedName = item.newName || item.name;
+                                const updatedAmount = item.newAmount || item.amount;
+                                updateItem(item.name, updatedName, updatedAmount);
+                            }}
+                            className={styles.updateButton}
+                            >
+                                Update Item
+                            </button>    
+                            </div>
+                            </div>
+
                         </div>
                     );
                 })}
