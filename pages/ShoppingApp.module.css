@@ -140,3 +140,13 @@
 .updateArea {
     margin-top: 15px;     
 }
+
+.updateButton {
+    padding: 5px;
+    background-color: yellowgreen;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

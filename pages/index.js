@@ -81,15 +81,14 @@ export default function ShoppingApp() {
     };
 
     // Update an item in the shopping list
-    const updateItem = async (name, newName, newAmount) => {
+    const updateItem = async (itemName, newAmount) => {
         try {
 
             const data = {
-                name: newName,
                 amount: newAmount
             };
     
-            const response = await axios.put(`${API_URL}/${name}`, data, {headers: { 'Content-Type': 'application/json' }});
+            const response = await axios.put(`${API_URL}/${itemName}`, data, {headers: { 'Content-Type': 'application/json' }});
             
 
             //reload page
@@ -145,12 +144,6 @@ export default function ShoppingApp() {
                             {/* update option below*/}
                             <div className = {styles.updateArea}>
                             <input
-                            type="text"
-                            defaultValue={item.name}
-                            className={styles.input}
-                            onChange={(e) => item.newName = e.target.value}
-                            />
-                            <input
                             type="number"
                             min="1"
                             defaultValue={item.amount}
@@ -161,13 +154,12 @@ export default function ShoppingApp() {
                             <div className={styles.buttonGroup}>
                             <button
                             onClick={() => {
-                                const updatedName = item.newName || item.name;
                                 const updatedAmount = item.newAmount || item.amount;
-                                updateItem(item.name, updatedName, updatedAmount);
+                                updateItem(item.name, updatedAmount);
                             }}
                             className={styles.updateButton}
                             >
-                                Update Item
+                                Update Amount
                             </button>    
                             </div>
                             </div>
